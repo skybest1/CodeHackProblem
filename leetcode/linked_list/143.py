@@ -24,9 +24,11 @@ class Solution(object):
         :rtype: void Do not return anything, modify head in-place instead.
         """
         length = self.get_list_length(head)
+        if length <= 2:
+            return head
         half_len = int(length/2)
         head1 = head
-        tail1 = None
+        tail1 = head
         head2 = head
         # find head 2
         for i in range(half_len):
@@ -36,17 +38,35 @@ class Solution(object):
         # set tail1
         tail1.next = None
         # reverse list2
-        new_head2 = self.reverse_list(head2)
+        new_head2 = self.new_reverse_list(head2)
         # merge list1 and list2
+        merged_head = self.merge_lists(head1, new_head2)
+        head = merged_head
 
     def merge_lists(self, head1, head2):
-        current = None
         index1 = head1
         index2 = head2
         new_head = head1
         counter = 0
-        next = index2
+        current = index1
+        index1 = index1.next
         while True:
+            if index1 == None or index2 == None:
+                break
+            counter += 1
+            if counter % 2 == 1:
+                current.next = index2
+                current = index2
+                index2 = index2.next
+            else:
+                current.next = index1
+                current = index1
+                index1 = index1.next
+        if index1 == None:
+            current.next = index2
+        else:
+            current.next = index1
+        return new_head
             
 
     def get_list_length(self, head):
@@ -58,6 +78,7 @@ class Solution(object):
             else:
                 length += 1
                 temp = temp.next
+        return length
 
 
     def reverse_list(self, head):
@@ -74,6 +95,22 @@ class Solution(object):
         temp = next.next
         next.next = current
         return self.do_reverse_list(next, temp)
+
+    def new_reverse_list(self, head):
+        if head is None:
+            return head
+
+        current = head
+        next = head.next
+        head.next = None
+        while True:
+            if next is None:
+                return current
+            temp = next.next
+            next.next = current
+            current = next
+            next = temp
+        return current
 
 
 class TestSolution(unittest.TestCase):
@@ -104,10 +141,12 @@ class TestSolution(unittest.TestCase):
 
     def test_reverse(self):
         head = self.make_node_list(5)
-        new_head = Solution().reverse_list(head)
-        while True:
-            if new_head is not None:
-                print new_head.val
-                new_head = new_head.next
-            else:
-                break
+        new_head = Solution().new_reverse_list(head)
+        self.make_test_print(new_head)
+        assert True
+
+    def test_merge(self):
+        list1 = self.make_node_list(2)
+        head = Solution().reorderList(list1)
+        #self.make_test_print(head)
+        #assert True
