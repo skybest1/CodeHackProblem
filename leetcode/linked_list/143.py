@@ -135,7 +135,7 @@ class TestSolution(unittest.TestCase):
             if head is None:
                 break
             else:
-                print head.val
+                print(head.val)
                 head = head.next
         assert True
 
