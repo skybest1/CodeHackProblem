@@ -4,6 +4,8 @@
 #         self.val = val
 #         self.left = left
 #         self.right = right
+
+
 class Solution(object):
 
     def build_node(self, preorder, inorder, inorder_dict, left, right):
